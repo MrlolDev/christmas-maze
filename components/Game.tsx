@@ -6,6 +6,7 @@ import Key from "./Key";
 import { generateMaze } from "@/lib/mazes";
 import { calculateScore } from "@/lib/scoring";
 import { useSession } from "next-auth/react";
+import Footer from "./footer";
 
 export default function Game() {
   const { data: session } = useSession();
@@ -210,18 +211,24 @@ export default function Game() {
       <h1 className="text-4xl font-bold text-red-800">Christmas Maze</h1>
 
       {gameStatus === "banned" && (
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">
-            You have been banned for suspicious activity
-          </h2>
-          <p className="text-gray-600">
-            Completing the maze too quickly is not allowed.
-          </p>
-        </div>
+        <>
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-red-600 mb-4">
+              You have been banned for suspicious activity
+            </h2>
+            <p className="text-gray-600">
+              Completing the maze too quickly is not allowed.
+            </p>
+          </div>
+          <Footer />
+        </>
       )}
 
       {gameStatus === "start" && !session?.user?.banned && (
-        <Button onClick={handleStartGame}>Start</Button>
+        <>
+          <Button onClick={handleStartGame}>Start</Button>
+          <Footer />
+        </>
       )}
 
       {gameStatus === "playing" && (
@@ -306,6 +313,7 @@ export default function Game() {
           </Button>
         </div>
       )}
+      <Footer />
     </div>
   );
 }
