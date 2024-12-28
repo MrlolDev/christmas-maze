@@ -7,7 +7,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function UserInfo() {
+export default function Navbar() {
   const { data: session } = useSession();
   const [scores, setScores] = useState<Score[]>([]);
 
@@ -22,7 +22,7 @@ export default function UserInfo() {
   }, [session?.user?.id]);
 
   return (
-    <nav className="flex flex-row items-center justify-between absolute top-[23vh] left-[50vw] translate-x-[-50%] h-16 bg-red-500 w-[25vw] rounded-full nav p-4">
+    <nav className="flex flex-row items-center justify-between absolute top-[23vh] left-[50vw] translate-x-[-50%] h-16 bg-red-500 w-[25vw] rounded-full nav py-4 px-2">
       <div className="flex items-center">
         <Image
           src={session?.user?.image || "/default-profile.png"}
@@ -39,16 +39,14 @@ export default function UserInfo() {
       >
         Leaderboard
       </Link>
-      <div className="text-white font-semibold">
-        Top Score:{" "}
-        {scores.length > 0 ? Math.max(...scores.map((s) => s.score)) : 0}
-      </div>
-      <button
+
+      <span
         className="text-white font-semibold transition-all duration-300 p-2 rounded-full button2"
         onClick={() => signOut()}
       >
-        Logout
-      </button>
+        Your Top Score:{" "}
+        {scores.length > 0 ? Math.max(...scores.map((s) => s.score)) : 0}
+      </span>
     </nav>
   );
 }

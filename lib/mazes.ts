@@ -110,9 +110,3 @@ export function generateMaze(
 
   return maze;
 }
-
-export function getMaze(index: number): Cell[][] {
-  // Use index and current timestamp to generate different seeds
-  const seed = Date.now() + index;
-  return generateMaze(12, 24, seed);
-}

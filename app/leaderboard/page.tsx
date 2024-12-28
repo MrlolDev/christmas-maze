@@ -36,7 +36,7 @@ export default function LeaderboardPage() {
       {loading ? (
         <div className="text-xl text-red-800">Loading...</div>
       ) : (
-        <div className="w-[600px] bg-red-500 rounded-lg nav p-6">
+        <div className="w-[600px] bg-red-500 rounded-lg nav p-6 max-h-[54vh] overflow-y-auto">
           <div className="space-y-4">
             {leaderboard.map((entry, index) => (
               <div
@@ -52,7 +52,12 @@ export default function LeaderboardPage() {
                     alt={`${entry.name}'s avatar`}
                     className="w-10 h-10 rounded-full"
                   />
-                  <span className="text-white font-semibold">{entry.name}</span>
+                  <Link
+                    href={`https://github.com/${entry.name}`}
+                    className="text-white font-semibold hover:text-white/50 underline transition-all duration-300"
+                  >
+                    {entry.name}
+                  </Link>
                 </div>
                 <span className="text-white font-bold">
                   {entry.highestScore} points

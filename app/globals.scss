@@ -317,3 +317,29 @@ body::before {
   background-size: 200px 200px;
   animation: snowfall 8s linear infinite;
 }
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 12px;
+  background: transparent !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a61715;
+
+  &:hover {
+    background: #dd4330;
+  }
+  border-radius: 100%;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #a61715 #ffffff;
+}
