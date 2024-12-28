@@ -233,8 +233,19 @@ export default function Game() {
 
       {gameStatus === "playing" && (
         <>
-          <div className="text-xl font-bold text-red-800 mb-4">
+          <div className="text-xl font-bold text-red-800 mb-4 flex items-center justify-center gap-2">
             Maze {currentMazeIndex + 1} of 3
+            <button
+              onClick={() => {
+                setGameStatus("start");
+                setMaze([]);
+                setStartTime(null);
+                setScore(null);
+              }}
+              className="button2 px-2 rounded-full"
+            >
+              Back to Lobby
+            </button>
           </div>
           <MazeInterpreter maze={maze} />
           <div className="mt-8 flex flex-col items-center gap-2 w-50">
@@ -262,58 +273,48 @@ export default function Game() {
                 active={activeKey === "ArrowRight"}
               />
             </div>
-
-            <Button
-              onClick={() => {
-                setGameStatus("start");
-                setMaze([]);
-                setStartTime(null);
-                setScore(null);
-              }}
-              className="mt-4 button"
-            >
-              Back to Lobby
-            </Button>
           </div>
         </>
       )}
       {gameStatus === "end" && (
-        <div className="text-center flex flex-col items-center justify-center">
-          <h2 className="text-2xl font-bold text-green-600 mb-4">
-            Congratulations! You completed all mazes!
-          </h2>
-          <div className="flex flex-col items-center justify-center nav rounded-md p-4 mb-4">
-            {mazeTimes.map((time, index) => (
-              <p key={index} className="text-xl mb-2">
-                Maze {index + 1}: {time.toFixed(2)} seconds
+        <>
+          <div className="text-center flex flex-col items-center justify-center">
+            <h2 className="text-2xl font-bold text-green-600 mb-4">
+              Congratulations! You completed all mazes!
+            </h2>
+            <div className="flex flex-col items-center justify-center nav rounded-md p-4 mb-4">
+              {mazeTimes.map((time, index) => (
+                <p key={index} className="text-xl mb-2">
+                  Maze {index + 1}: {time.toFixed(2)} seconds
+                </p>
+              ))}
+              <p className="text-xl mb-2">
+                Average Time:{" "}
+                {(
+                  mazeTimes.reduce((a, b) => a + b, 0) / mazeTimes.length
+                ).toFixed(2)}{" "}
+                seconds
               </p>
-            ))}
-            <p className="text-xl mb-2">
-              Average Time:{" "}
-              {(
-                mazeTimes.reduce((a, b) => a + b, 0) / mazeTimes.length
-              ).toFixed(2)}{" "}
-              seconds
-            </p>
-            {score !== null && (
-              <p className="text-xl font-bold">Score: {score} points</p>
-            )}
+              {score !== null && (
+                <p className="text-xl font-bold">Score: {score} points</p>
+              )}
+            </div>
+            <Button
+              onClick={() => {
+                setGameStatus("playing");
+                handleStartGame();
+                setStartTime(Date.now());
+                setScore(null);
+                setCurrentMazeIndex(0);
+                setMazeTimes([]);
+              }}
+            >
+              Play Again
+            </Button>
           </div>
-          <Button
-            onClick={() => {
-              setGameStatus("playing");
-              handleStartGame();
-              setStartTime(Date.now());
-              setScore(null);
-              setCurrentMazeIndex(0);
-              setMazeTimes([]);
-            }}
-          >
-            Play Again
-          </Button>
-        </div>
+          <Footer />
+        </>
       )}
-      <Footer />
     </div>
   );
 }
