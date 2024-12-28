@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="flex flex-row items-center justify-between absolute bottom-[10vh] left-[50vw] translate-x-[-50%] h-16 bg-red-500 w-[25vw] rounded-full nav p-4">
+    <footer className="flex flex-row items-center justify-between absolute bottom-[8vh] left-[50vw] translate-x-[-50%] h-16 bg-red-500 w-[25vw] rounded-full nav p-4">
       <div className="text-center text-sm text-white">
         Made with ♥ by{" "}
         <a
