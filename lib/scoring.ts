@@ -4,7 +4,7 @@ export function calculateScore(averageTimeInSeconds: number): number | null {
     return null;
   }
 
-  // Base score of 15000 (increased from 10000 since it's 3 mazes)
+  // Base score of 15000
   // The longer it takes on average, the less points you get
   const score = Math.max(0, Math.floor(15000 - averageTimeInSeconds * 100));
   return score;
