@@ -267,6 +267,21 @@ export default function Game() {
       {gameStatus === "start" && !session?.user?.banned && (
         <>
           <Button onClick={handleStartGame}>Start</Button>
+          <div className="mt-4">
+            <a
+              href="https://www.producthunt.com/posts/christmas-maze?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-christmas&#0045;maze"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=743032&theme=light"
+                alt="Christmas Maze - Be the fastest in solving mazes | Product Hunt"
+                style={{ width: "250px", height: "54px" }}
+                width="250"
+                height="54"
+              />
+            </a>
+          </div>
           <Footer />
         </>
       )}
