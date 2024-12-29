@@ -23,8 +23,12 @@ export async function GET() {
       .filter((user): user is User => user !== null)
       .map((user) => {
         const highestScore =
-          user.scores.length > 0
-            ? Math.max(...user.scores.map((s) => s.score))
+          user.scores.filter((s) => s.newScoreSystem).length > 0
+            ? Math.max(
+                ...user.scores
+                  .filter((s) => s.newScoreSystem)
+                  .map((s) => s.score.totalScore ?? s.score)
+              )
             : 0;
 
         return {

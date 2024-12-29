@@ -16,10 +16,19 @@ export default function Game() {
   const [maze, setMaze] = useState<string[][]>([]);
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [startTime, setStartTime] = useState<number | null>(null);
-  const [score, setScore] = useState<number | null>(null);
+  const [score, setScore] = useState<{
+    totalScore: number;
+    mazeScores: number[];
+  } | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentMazeIndex, setCurrentMazeIndex] = useState(0);
-  const [mazeTimes, setMazeTimes] = useState<number[]>([]);
+  const [mazeInfo, setMazeInfo] = useState<
+    {
+      mazeIndex: number;
+      time?: number;
+      steps: number;
+    }[]
+  >([]);
 
   const [position, setPosition] = useState(() => {
     for (let i = 0; i < maze.length; i++) {
@@ -100,6 +109,26 @@ export default function Game() {
       })
     );
 
+    if (mazeInfo.length !== currentMazeIndex + 1) {
+      setMazeInfo((prev) => [
+        ...prev,
+        {
+          mazeIndex: currentMazeIndex,
+          steps: 1,
+        },
+      ]);
+    } else {
+      const newMazeInfo = mazeInfo.map((maze) => {
+        if (maze.mazeIndex === currentMazeIndex) {
+          return {
+            ...maze,
+            steps: maze.steps + 1,
+          };
+        }
+        return maze;
+      });
+      setMazeInfo(newMazeInfo);
+    }
     setPosition(newPosition);
     setMaze(newMaze);
   };
@@ -120,7 +149,7 @@ export default function Game() {
     const handleKeyUp = () => {
       setTimeout(() => {
         setActiveKey(null);
-      }, 500);
+      }, 200);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -164,10 +193,18 @@ export default function Game() {
     if (!startTime || !session?.user?.id) return;
 
     const endTimeNow = Date.now();
-
     const timeInSeconds = (endTimeNow - startTime) / 1000;
-    setMazeTimes((prev) => [...prev, timeInSeconds]);
-
+    const newMazeInfo = mazeInfo.map((maze) => {
+      if (maze.mazeIndex === currentMazeIndex) {
+        return {
+          ...maze,
+          time: timeInSeconds,
+          steps: maze.steps,
+        };
+      }
+      return maze;
+    });
+    setMazeInfo(newMazeInfo);
     if (currentMazeIndex < 2) {
       // Move to next maze
       setCurrentMazeIndex((prev) => prev + 1);
@@ -177,9 +214,12 @@ export default function Game() {
     }
 
     // Calculate final score after all mazes
-    const totalTime = [...mazeTimes, timeInSeconds].reduce((a, b) => a + b, 0);
-    const averageTime = totalTime / 3;
-    const calculatedScore = calculateScore(averageTime);
+    const mazeAttempts = mazeInfo.map((maze) => ({
+      timeInSeconds: maze.time ?? 0,
+      steps: maze.steps ?? 0,
+    }));
+
+    const calculatedScore = calculateScore(mazeAttempts);
 
     if (calculatedScore === null) {
       await fetch("/api/users/ban", {
@@ -283,20 +323,16 @@ export default function Game() {
               Congratulations! You completed all mazes!
             </h2>
             <div className="flex flex-col items-center justify-center nav rounded-md p-4 mb-4">
-              {mazeTimes.map((time, index) => (
+              {mazeInfo.map((maze, index) => (
                 <p key={index} className="text-xl mb-2">
-                  Maze {index + 1}: {time.toFixed(2)} seconds
+                  Maze {index + 1}: {maze.time?.toFixed(2)} seconds -{" "}
+                  {maze.steps} steps - {score?.mazeScores[index]} points
                 </p>
               ))}
-              <p className="text-xl mb-2">
-                Average Time:{" "}
-                {(
-                  mazeTimes.reduce((a, b) => a + b, 0) / mazeTimes.length
-                ).toFixed(2)}{" "}
-                seconds
-              </p>
               {score !== null && (
-                <p className="text-xl font-bold">Score: {score} points</p>
+                <p className="text-xl font-bold">
+                  Score: {score.totalScore} points
+                </p>
               )}
             </div>
             <Button
@@ -306,7 +342,7 @@ export default function Game() {
                 setStartTime(Date.now());
                 setScore(null);
                 setCurrentMazeIndex(0);
-                setMazeTimes([]);
+                setMazeInfo([]);
               }}
             >
               Play Again

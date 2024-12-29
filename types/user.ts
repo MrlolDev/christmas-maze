@@ -1,8 +1,12 @@
 export type Score = {
   id: string;
-  score: number;
+  score: {
+    totalScore: number;
+    mazeScores: number[];
+  };
   created_at: Date;
   isTopScore: boolean;
+  newScoreSystem: boolean;
 };
 
 export type User = {

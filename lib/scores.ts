@@ -6,7 +6,10 @@ const kv = createClient({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-export async function addScore(userId: string, score: number) {
+export async function addScore(
+  userId: string,
+  score: { totalScore: number; mazeScores: number[] }
+) {
   const user = await kv.get<User>(`user:${userId}`);
   if (!user) return null;
 
@@ -14,9 +17,15 @@ export async function addScore(userId: string, score: number) {
     id: crypto.randomUUID(),
     score,
     created_at: new Date(),
+    newScoreSystem: true,
     isTopScore:
       user.scores.length === 0 ||
-      score > Math.max(...user.scores.map((s) => s.score)),
+      score.totalScore >
+        Math.max(
+          ...user.scores
+            .filter((s) => s.newScoreSystem)
+            .map((s) => s.score.totalScore)
+        ),
   };
 
   const updatedUser = {

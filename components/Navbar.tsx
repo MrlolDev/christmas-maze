@@ -45,7 +45,13 @@ export default function Navbar() {
         onClick={() => signOut()}
       >
         Your Top Score:{" "}
-        {scores.length > 0 ? Math.max(...scores.map((s) => s.score)) : 0}
+        {scores.length > 0
+          ? Math.max(
+              ...scores
+                .filter((s) => s.newScoreSystem)
+                .map((s) => s.score.totalScore ?? s.score)
+            )
+          : 0}
       </span>
     </nav>
   );
